@@ -1,0 +1,57 @@
+import { Button, VerticalBox, LineEdit, TextEdit, ComboBox } from "std-widgets.slint";
+
+export component AppWindow inherits Window {
+    title: "rest client";
+    in-out property <string> response: "";
+    callback send(string, string);
+    width: 1000px;
+    height: 900px;
+    VerticalLayout {
+        GridLayout {
+            padding: 30px;
+            spacing: 10px;
+            Row {
+                method := ComboBox {
+                    width: 120px;
+                    model: ["GET", "POST", "DELETE", "PUT", "PATCH"];
+                    current-value: "GET";
+                }
+
+                input-url := LineEdit {
+                    placeholder-text: "url here";
+                    height: 50px;
+                }
+
+                Button {
+                    text: "send";
+                    clicked => {
+                        root.send(input-url.text, method.current-value);
+                    }
+                    width: 70px;
+                }
+            }
+        }
+
+        GridLayout {
+            padding: 30px;
+            padding-top: 0;
+            spacing: 10px;
+            Row {
+                GridLayout {
+                    spacing: 5px;
+                    Row {
+                        TextEdit {
+                            placeholder-text: "payload";
+                        }
+
+                        TextEdit {
+                            text: "\{root.response}";
+                            read-only: true;
+                            placeholder-text: "response";
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

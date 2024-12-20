@@ -1,33 +1,68 @@
-import { Button, VerticalBox, LineEdit, TextEdit, ComboBox } from "std-widgets.slint";
+import { Button, VerticalBox, LineEdit, TextEdit, ComboBox, HorizontalBox } from "std-widgets.slint";
 
 export component AppWindow inherits Window {
     title: "rest client";
     in-out property <string> response: "";
+    in-out property <string> response-status: "200 OK";
+    in-out property <string> request-duration: "170 ms";
+    in-out property <string> response-size: "3.1 KB";
+    property <color> dark-gray: #454545;
     callback send(string, string);
-    width: 1000px;
-    height: 900px;
+    min-width: 1280px;
+    min-height: 720px;
     VerticalLayout {
         GridLayout {
-            padding: 30px;
-            spacing: 10px;
+            padding: 20px;
+            spacing: 7px;
             Row {
-                method := ComboBox {
-                    width: 120px;
-                    model: ["GET", "POST", "DELETE", "PUT", "PATCH"];
-                    current-value: "GET";
-                }
-
-                input-url := LineEdit {
-                    placeholder-text: "url here";
-                    height: 50px;
-                }
-
-                Button {
-                    text: "send";
-                    clicked => {
-                        root.send(input-url.text, method.current-value);
+                HorizontalBox {
+                    width: 50%;
+                    method := ComboBox {
+                        width: 10%;
+                        model: ["GET", "POST", "DELETE", "PUT", "PATCH"];
+                        current-value: "GET";
                     }
-                    width: 70px;
+
+                    input-url := LineEdit {
+                        placeholder-text: "url here";
+                        height: 80%;
+                    }
+
+                    Button {
+                        text: "send";
+                        clicked => {
+                            root.send(input-url.text, method.current-value);
+                        }
+                        width: 10%;
+                    }
+                }
+
+                HorizontalBox {
+                    width: 50%;
+                    padding: 20px;
+                    Rectangle {
+                        width: 20%;
+                        background: green;
+                        Text {
+                            text: response-status;
+                        }
+                    }
+
+                    Rectangle {
+                        width: 20%;
+                        background: dark-gray;
+                        Text {
+                            text: request-duration;
+                        }
+                    }
+
+                    Rectangle {
+                        width: 20%;
+                        background: dark-gray;
+                        Text {
+                            text: response-size;
+                        }
+                    }
                 }
             }
         }
@@ -41,7 +76,7 @@ export component AppWindow inherits Window {
                     spacing: 5px;
                     Row {
                         TextEdit {
-                            placeholder-text: "payload";
+                            placeholder-text: "body";
                         }
 
                         TextEdit {

@@ -2,7 +2,9 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use serde_json::Value;
+use slint::SharedString;
 use std::error::Error;
+use std::time::Instant;
 
 slint::include_modules!();
 
@@ -21,11 +23,28 @@ fn main() -> Result<(), Box<dyn Error>> {
             println!("calling url: {}, with method: {}", url, method);
             let ui = ui_handle.unwrap();
             let method: String = method.into();
-            match get_request(url.as_str()) {
+
+            let start = Instant::now();
+            let result = get_request(url.as_str());
+            let duration = start.elapsed();
+
+            let request_duration = format!("{:?}", duration);
+            // ui.set_request_duration(request_duration.into());
+            ui.set_request_duration(SharedString::from(request_duration));
+            match result {
                 Ok(value) => {
-                    let pretty_response =
-                        format!("{}", serde_json::to_string_pretty(&value).unwrap());
-                    ui.set_response(pretty_response.into());
+                    // let pretty_response =
+                    // format!("{}", serde_json::to_string_pretty(&value).unwrap());
+                    // ui.set_response(pretty_response.into());
+                    // ui.set_response(SharedString::from(pretty_response));
+                    match serde_json::to_string_pretty(&value) {
+                        Ok(value) => {
+                            ui.set_response(SharedString::from(value));
+                        }
+                        Err(err) => {
+                            ui.set_response(SharedString::from("failed"));
+                        }
+                    }
                 }
                 Err(error) => {
                     println!("error: call failed due to: {:?}", error);

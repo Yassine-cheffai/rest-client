@@ -3,9 +3,9 @@ import { Button, VerticalBox, LineEdit, TextEdit, ComboBox, HorizontalBox } from
 export component AppWindow inherits Window {
     title: "rest client";
     in-out property <string> response: "";
-    in-out property <string> response-status: "200 OK";
-    in-out property <string> request-duration: "170 ms";
-    in-out property <string> response-size: "3.1 KB";
+    in-out property <string> response-status: "";
+    in-out property <string> request-duration: "";
+    in-out property <string> response-size: "";
     property <color> dark-gray: #454545;
     callback send(string, string);
     min-width: 1280px;
@@ -18,14 +18,14 @@ export component AppWindow inherits Window {
                 HorizontalBox {
                     width: 50%;
                     method := ComboBox {
-                        width: 10%;
+                        width: 15%;
                         model: ["GET", "POST", "DELETE", "PUT", "PATCH"];
                         current-value: "GET";
                     }
 
                     input-url := LineEdit {
                         placeholder-text: "url here";
-                        height: 80%;
+                        height: 75%;
                     }
 
                     Button {
